@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Proposal Generator</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0f0f1a;
+      --surface:  #1a1a2e;
+      --border:   #2a2a4a;
+      --accent:   #6c63ff;
+      --accent2:  #00c896;
+      --text:     #e8e8f0;
+      --muted:    #888899;
+      --error:    #ff6b6b;
+      --radius:   10px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      min-height: 100vh;
+      padding: 24px 16px;
+    }
+
+    .container { max-width: 860px; margin: 0 auto; }
+
+    header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 32px;
+    }
+    header .logo {
+      width: 44px; height: 44px;
+      background: var(--accent);
+      border-radius: 10px;
+      display: grid; place-items: center;
+      font-size: 22px;
+    }
+    header h1 { font-size: 1.4rem; font-weight: 700; }
+    header p  { font-size: 0.82rem; color: var(--muted); margin-top: 2px; }
+
+    /* Tabs */
+    .tabs { display: flex; gap: 4px; margin-bottom: 24px; }
+    .tab-btn {
+      padding: 8px 20px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.88rem;
+      transition: all .15s;
+    }
+    .tab-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* Form card */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+    }
+
+    .form-row { margin-bottom: 18px; }
+    .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 18px; }
+
+    label {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 0.92rem;
+      padding: 10px 14px;
+      outline: none;
+      transition: border-color .15s;
+      font-family: inherit;
+    }
+    input:focus, textarea:focus, select:focus { border-color: var(--accent); }
+    textarea { resize: vertical; min-height: 160px; line-height: 1.55; }
+
+    .rate-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .rate-chip {
+      padding: 7px 16px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all .15s;
+    }
+    .rate-chip:hover  { border-color: var(--accent); color: var(--accent); }
+    .rate-chip.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+    #customRate {
+      width: 110px;
+      display: none;
+    }
+    #customRate.show { display: block; }
+
+    .btn-generate {
+      width: 100%;
+      padding: 14px;
+      background: var(--accent);
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity .15s;
+      margin-top: 6px;
+    }
+    .btn-generate:hover   { opacity: .88; }
+    .btn-generate:disabled { opacity: .4; cursor: not-allowed; }
+
+    /* Spinner */
+    .spinner {
+      display: none;
+      width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      margin: 0 auto;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Result */
+    .result-box {
+      margin-top: 24px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      display: none;
+    }
+    .result-box.show { display: block; }
+    .result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .result-header .badge {
+      font-size: 0.78rem;
+      background: var(--accent2);
+      color: #000;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-weight: 700;
+    }
+    .proposal-text {
+      line-height: 1.7;
+      white-space: pre-wrap;
+      font-size: 0.95rem;
+    }
+    .btn-copy {
+      margin-top: 16px;
+      padding: 9px 20px;
+      border: 1px solid var(--accent2);
+      border-radius: 8px;
+      background: transparent;
+      color: var(--accent2);
+      cursor: pointer;
+      font-size: 0.88rem;
+      transition: all .15s;
+    }
+    .btn-copy:hover { background: var(--accent2); color: #000; }
+
+    /* Error */
+    .error-msg {
+      color: var(--error);
+      font-size: 0.88rem;
+      margin-top: 12px;
+      display: none;
+    }
+    .error-msg.show { display: block; }
+
+    /* History */
+    .history-list { display: flex; flex-direction: column; gap: 14px; }
+    .history-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      cursor: pointer;
+      transition: border-color .15s;
+    }
+    .history-item:hover { border-color: var(--accent); }
+    .history-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .history-title { font-weight: 700; margin-bottom: 8px; font-size: 0.97rem; }
+    .history-preview {
+      font-size: 0.85rem;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .history-full {
+      display: none;
+      margin-top: 14px;
+      white-space: pre-wrap;
+      line-height: 1.65;
+      font-size: 0.9rem;
+      border-top: 1px solid var(--border);
+      padding-top: 14px;
+    }
+    .history-full.open { display: block; }
+    .empty-state {
+      text-align: center;
+      color: var(--muted);
+      padding: 48px 0;
+    }
+
+    @media (max-width: 540px) {
+      .form-row-2 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="logo">✍</div>
+    <div>
+      <h1>Proposal Generator</h1>
+      <p>Alfred Varghese · Powered by Claude AI</p>
+    </div>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('generate', this)">Generate</button>
+    <button class="tab-btn" onclick="switchTab('history', this)">History</button>
+  </div>
+
+  <!-- GENERATE TAB -->
+  <div id="tab-generate" class="tab-panel active">
+    <div class="card">
+      <div class="form-row-2">
+        <div>
+          <label>Job Title (optional)</label>
+          <input id="jobTitle" type="text" placeholder="e.g. Virtual Assistant for E-commerce Brand" />
+        </div>
+        <div>
+          <label>Job URL (optional)</label>
+          <input id="jobUrl" type="url" placeholder="https://www.upwork.com/jobs/..." />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label>Job Posting *</label>
+        <textarea id="jobPosting" placeholder="Paste the full Upwork job description here…"></textarea>
+      </div>
+
+      <div class="form-row">
+        <label>Hourly Rate</label>
+        <div class="rate-row">
+          <button class="rate-chip active" data-rate="65" onclick="selectRate(this)">$65/hr</button>
+          <button class="rate-chip" data-rate="75" onclick="selectRate(this)">$75/hr</button>
+          <button class="rate-chip" data-rate="90" onclick="selectRate(this)">$90/hr</button>
+          <button class="rate-chip" data-rate="custom" onclick="selectRate(this)">Custom</button>
+          <input id="customRate" type="number" placeholder="e.g. 80" min="10" max="500" />
+        </div>
+      </div>
+
+      <button class="btn-generate" id="generateBtn" onclick="generate()">
+        <span id="btnLabel">Generate Proposal</span>
+        <div class="spinner" id="spinner"></div>
+      </button>
+
+      <div class="error-msg" id="errorMsg"></div>
+
+      <div class="result-box" id="resultBox">
+        <div class="result-header">
+          <strong>Your Proposal</strong>
+          <span class="badge" id="wordCountBadge">— words</span>
+        </div>
+        <div class="proposal-text" id="proposalText"></div>
+        <button class="btn-copy" onclick="copyProposal()">Copy to Clipboard</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HISTORY TAB -->
+  <div id="tab-history" class="tab-panel">
+    <div id="historyList" class="history-list">
+      <div class="empty-state">Loading history…</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  let selectedRate = 65;
+
+  function switchTab(name, btn) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + name).classList.add('active');
+    if (name === 'history') loadHistory();
+  }
+
+  function selectRate(btn) {
+    document.querySelectorAll('.rate-chip').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const customInput = document.getElementById('customRate');
+    if (btn.dataset.rate === 'custom') {
+      customInput.classList.add('show');
+      selectedRate = parseInt(customInput.value) || 65;
+    } else {
+      customInput.classList.remove('show');
+      selectedRate = parseInt(btn.dataset.rate);
+    }
+  }
+
+  document.getElementById('customRate').addEventListener('input', function() {
+    selectedRate = parseInt(this.value) || 65;
+  });
+
+  function setLoading(on) {
+    const btn    = document.getElementById('generateBtn');
+    const label  = document.getElementById('btnLabel');
+    const spinner = document.getElementById('spinner');
+    btn.disabled = on;
+    label.style.display  = on ? 'none' : 'inline';
+    spinner.style.display = on ? 'block' : 'none';
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('errorMsg');
+    el.textContent = msg;
+    el.classList.add('show');
+  }
+
+  function clearError() {
+    document.getElementById('errorMsg').classList.remove('show');
+  }
+
+  function generate() {
+    clearError();
+    const jobPosting = document.getElementById('jobPosting').value.trim();
+    const jobTitle   = document.getElementById('jobTitle').value.trim();
+    const jobUrl     = document.getElementById('jobUrl').value.trim();
+
+    if (jobPosting.length < 50) {
+      showError('Please paste the full job description (at least 50 characters).');
+      return;
+    }
+
+    setLoading(true);
+    document.getElementById('resultBox').classList.remove('show');
+
+    google.script.run
+      .withSuccessHandler(function(res) {
+        setLoading(false);
+        if (!res.ok) { showError(res.error); return; }
+        document.getElementById('proposalText').textContent = res.proposal;
+        document.getElementById('wordCountBadge').textContent = res.wordCount + ' words';
+        document.getElementById('resultBox').classList.add('show');
+      })
+      .withFailureHandler(function(err) {
+        setLoading(false);
+        showError('Unexpected error: ' + err.message);
+      })
+      .handleGenerate({
+        jobPosting,
+        jobTitle,
+        jobUrl,
+        rate: selectedRate,
+      });
+  }
+
+  function copyProposal() {
+    const text = document.getElementById('proposalText').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.querySelector('.btn-copy');
+      btn.textContent = 'Copied!';
+      setTimeout(() => { btn.textContent = 'Copy to Clipboard'; }, 2000);
+    });
+  }
+
+  function loadHistory() {
+    const container = document.getElementById('historyList');
+    container.innerHTML = '<div class="empty-state">Loading…</div>';
+
+    google.script.run
+      .withSuccessHandler(function(res) {
+        if (!res.ok || !res.history.length) {
+          container.innerHTML = '<div class="empty-state">No proposals generated yet.</div>';
+          return;
+        }
+        container.innerHTML = res.history.map((item, i) => `
+          <div class="history-item" onclick="toggleHistory(${i})">
+            <div class="history-meta">
+              <span>${item.timestamp}</span>
+              <span>$${item.rate}/hr · ${item.wordCount} words</span>
+            </div>
+            <div class="history-title">${escapeHtml(item.jobTitle)}</div>
+            <div class="history-preview">${escapeHtml(item.proposal.substring(0, 120))}…</div>
+            <div class="history-full" id="hist-${i}">${escapeHtml(item.proposal)}</div>
+          </div>
+        `).join('');
+      })
+      .withFailureHandler(function(err) {
+        container.innerHTML = '<div class="empty-state">Failed to load history.</div>';
+      })
+      .handleGetHistory();
+  }
+
+  function toggleHistory(i) {
+    const el = document.getElementById('hist-' + i);
+    el.classList.toggle('open');
+  }
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+</script>
+</body>
+</html>
