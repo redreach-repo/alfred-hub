@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Français — Alfred's TEF Canada Prep</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;0,900;1,300;1,600&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F5F0E8;
+  --surface: #FDFAF4;
+  --surface2: #EDE8DE;
+  --border: #D4CCBC;
+  --ink: #1A1710;
+  --ink-muted: #6B6456;
+  --ink-dim: #A89E90;
+  --red: #C0392B;
+  --red-soft: #C0392B18;
+  --blue: #1B4F8A;
+  --blue-soft: #1B4F8A15;
+  --green: #1A6B3C;
+  --green-soft: #1A6B3C15;
+  --amber: #B5620A;
+  --amber-soft: #B5620A15;
+  --gold: #C9A84C;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  background-image: radial-gradient(ellipse at 20% 50%, #E8DFC820 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, #D4C8A820 0%, transparent 50%);
+}
+.header { max-width: 860px; margin: 0 auto; padding: 40px 24px 0; display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+.header-left h1 { font-family: 'Fraunces', serif; font-size: clamp(36px, 6vw, 56px); font-weight: 900; line-height: 1; color: var(--ink); letter-spacing: -2px; }
+.header-left h1 em { font-style: italic; color: var(--blue); }
+.header-left p { font-size: 13px; color: var(--ink-muted); margin-top: 6px; font-family: 'DM Mono', monospace; letter-spacing: 0.5px; }
+.streak-box { background: var(--ink); color: var(--bg); border-radius: 12px; padding: 12px 20px; text-align: center; }
+.streak-box .streak-num { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 900; color: var(--gold); line-height: 1; }
+.streak-box .streak-lbl { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: #A89E90; margin-top: 2px; }
+.progress-strip { max-width: 860px; margin: 24px auto 0; padding: 0 24px; }
+.progress-meta { display: flex; justify-content: space-between; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--ink-muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+.progress-bar { height: 6px; background: var(--surface2); border-radius: 3px; overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--blue), var(--gold)); border-radius: 3px; transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.nav { max-width: 860px; margin: 24px auto 0; padding: 0 24px; display: flex; gap: 6px; flex-wrap: wrap; }
+.nav-btn { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.5px; padding: 8px 16px; border-radius: 20px; border: 1.5px solid var(--border); background: transparent; color: var(--ink-muted); cursor: pointer; transition: all 0.15s; text-transform: uppercase; }
+.nav-btn:hover { border-color: var(--blue); color: var(--blue); }
+.nav-btn.active { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.main { max-width: 860px; margin: 28px auto 80px; padding: 0 24px; }
+.section { display: none; }
+.section.active { display: block; }
+.lesson-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; margin-bottom: 32px; }
+.lesson-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 16px; padding: 20px; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden; }
+.lesson-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--card-color, var(--blue)); border-radius: 16px 16px 0 0; }
+.lesson-card:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.08); border-color: var(--card-color, var(--blue)); }
+.lesson-card .card-icon { font-size: 28px; margin-bottom: 10px; }
+.lesson-card .card-title { font-family: 'Fraunces', serif; font-size: 17px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+.lesson-card .card-sub { font-size: 12px; color: var(--ink-muted); line-height: 1.5; }
+.lesson-card .card-badge { display: inline-block; margin-top: 10px; font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; padding: 3px 8px; border-radius: 4px; background: var(--card-color-soft, var(--blue-soft)); color: var(--card-color, var(--blue)); }
+.lesson-view { display: none; }
+.lesson-view.active { display: block; }
+.lesson-header { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; }
+.lesson-header-main { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; width: 100%; justify-content: space-between; }
+.lesson-tools { display: flex; align-items: center; gap: 8px; }
+.tts-status { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.8px; text-transform: uppercase; color: var(--ink-dim); padding: 7px 10px; border-radius: 8px; border: 1.5px solid var(--border); background: var(--surface2); min-width: 118px; text-align: center; }
+.tts-status.speaking { color: var(--blue); border-color: var(--blue); background: var(--blue-soft); }
+.tts-status.error { color: var(--red); border-color: var(--red); background: var(--red-soft); }
+.back-btn { background: var(--surface2); border: none; border-radius: 8px; padding: 8px 14px; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--ink-muted); cursor: pointer; transition: all 0.15s; }
+.back-btn:hover { background: var(--border); color: var(--ink); }
+.lesson-title { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 700; }
+.mode-btn { background: var(--surface2); border: 1.5px solid var(--border); border-radius: 8px; padding: 8px 12px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.8px; text-transform: uppercase; color: var(--ink-muted); cursor: pointer; transition: all 0.15s; }
+.mode-btn:hover { border-color: var(--blue); color: var(--blue); }
+.mode-btn.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+.vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-bottom: 28px; }
+.vocab-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 12px; padding: 16px; cursor: pointer; transition: all 0.2s; text-align: center; user-select: none; }
+.vocab-card:hover { border-color: var(--blue); background: var(--blue-soft); }
+.vocab-card .vc-french { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; color: var(--blue); margin-bottom: 4px; }
+.vocab-card .vc-english { font-size: 13px; color: var(--ink-muted); }
+.vocab-card .vc-example { font-size: 11px; color: var(--ink-dim); font-style: italic; margin-top: 4px; display: none; }
+.vocab-card.revealed .vc-example { display: block; }
+.vocab-card .vc-meta { display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 10px; }
+.vocab-card .vc-audio { font-size: 11px; color: var(--ink-dim); }
+.speak-btn { border: 1.5px solid var(--border); background: var(--bg); border-radius: 999px; padding: 5px 10px; font-size: 11px; color: var(--ink-muted); cursor: pointer; transition: all 0.15s; }
+.speak-btn:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-soft); }
+
+.vocab-grid.flip-mode .vocab-card { min-height: 144px; display: flex; align-items: center; justify-content: center; }
+.vocab-grid.flip-mode .vocab-card .vc-front,
+.vocab-grid.flip-mode .vocab-card .vc-back { width: 100%; }
+.vocab-grid.flip-mode .vocab-card .vc-back { display: none; }
+.vocab-grid.flip-mode .vocab-card .vc-example { display: block; margin-top: 6px; }
+.vocab-grid.flip-mode .vocab-card.flipped .vc-front { display: none; }
+.vocab-grid.flip-mode .vocab-card.flipped .vc-back { display: block; }
+.quiz-container { max-width: 600px; margin: 0 auto; }
+.quiz-progress { display: flex; gap: 6px; margin-bottom: 24px; }
+.quiz-dot { flex: 1; height: 4px; border-radius: 2px; background: var(--surface2); transition: background 0.3s; }
+.quiz-dot.done { background: var(--green); }
+.quiz-dot.current { background: var(--blue); }
+.quiz-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 20px; padding: 32px; margin-bottom: 16px; text-align: center; }
+.quiz-type { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--ink-dim); margin-bottom: 16px; }
+.quiz-question { font-family: 'Fraunces', serif; font-size: clamp(20px, 4vw, 32px); font-weight: 700; color: var(--ink); margin-bottom: 8px; line-height: 1.2; }
+.quiz-hint { font-size: 13px; color: var(--ink-muted); margin-bottom: 24px; }
+.quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.quiz-opt { background: var(--bg); border: 1.5px solid var(--border); border-radius: 12px; padding: 14px 16px; font-size: 14px; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.15s; text-align: left; }
+.quiz-opt:hover:not(:disabled) { border-color: var(--blue); background: var(--blue-soft); color: var(--blue); }
+.quiz-opt.correct { background: var(--green-soft); border-color: var(--green); color: var(--green); }
+.quiz-opt.wrong { background: var(--red-soft); border-color: var(--red); color: var(--red); }
+.quiz-opt:disabled { cursor: not-allowed; }
+.quiz-input { width: 100%; background: var(--bg); border: 2px solid var(--border); border-radius: 12px; padding: 14px 18px; font-size: 18px; font-family: 'Fraunces', serif; color: var(--ink); outline: none; transition: border-color 0.15s; text-align: center; margin-bottom: 12px; }
+.quiz-input:focus { border-color: var(--blue); }
+.quiz-input.correct { border-color: var(--green); background: var(--green-soft); }
+.quiz-input.wrong { border-color: var(--red); background: var(--red-soft); }
+.quiz-submit { background: var(--ink); color: var(--bg); border: none; border-radius: 10px; padding: 12px 28px; font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: all 0.15s; }
+.quiz-submit:hover { background: var(--blue); }
+.quiz-feedback { border-radius: 12px; padding: 14px 18px; font-size: 14px; line-height: 1.6; margin-top: 12px; display: none; }
+.quiz-feedback.show { display: block; }
+.quiz-feedback.correct { background: var(--green-soft); color: var(--green); border: 1px solid var(--green); }
+.quiz-feedback.wrong { background: var(--red-soft); color: var(--red); border: 1px solid var(--red); }
+.next-btn { width: 100%; background: var(--blue); color: #fff; border: none; border-radius: 12px; padding: 15px; font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; margin-top: 12px; display: none; transition: all 0.15s; }
+.next-btn.show { display: block; }
+.next-btn:hover { background: var(--ink); }
+.score-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 20px; padding: 40px; text-align: center; display: none; }
+.score-card.show { display: block; }
+.score-card .score-num { font-family: 'Fraunces', serif; font-size: 72px; font-weight: 900; color: var(--blue); line-height: 1; margin-bottom: 8px; }
+.score-card .score-label { font-size: 14px; color: var(--ink-muted); margin-bottom: 24px; }
+.score-card .score-msg { font-family: 'Fraunces', serif; font-size: 22px; font-style: italic; color: var(--ink); margin-bottom: 24px; }
+.retry-btn { background: var(--ink); color: var(--bg); border: none; border-radius: 10px; padding: 12px 28px; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; margin: 4px; transition: all 0.15s; }
+.retry-btn:hover { background: var(--blue); }
+.phrase-section { margin-bottom: 28px; }
+.phrase-section h3 { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; margin-bottom: 12px; color: var(--ink); }
+.phrase-row { display: flex; align-items: flex-start; gap: 14px; background: var(--surface); border: 1.5px solid var(--border); border-radius: 12px; padding: 14px 16px; margin-bottom: 8px; transition: all 0.15s; cursor: pointer; }
+.phrase-row:hover { border-color: var(--blue); background: var(--blue-soft); }
+.phrase-row .pr-fr { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 600; color: var(--blue); min-width: 180px; flex-shrink: 0; }
+.phrase-row .pr-en { font-size: 13px; color: var(--ink-muted); line-height: 1.5; }
+.phrase-row .pr-note { font-size: 11px; color: var(--ink-dim); font-style: italic; margin-top: 2px; }
+.tef-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin-bottom: 24px; }
+.tef-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 14px; padding: 18px; }
+.tef-card .tc-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--ink-dim); margin-bottom: 8px; }
+.tef-card .tc-val { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 700; color: var(--blue); margin-bottom: 4px; }
+.tef-card .tc-desc { font-size: 12px; color: var(--ink-muted); line-height: 1.5; }
+.tip-box { background: var(--amber-soft); border: 1.5px solid var(--amber); border-radius: 12px; padding: 16px 18px; margin-bottom: 12px; }
+.tip-box .tip-title { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--amber); margin-bottom: 6px; }
+.tip-box p { font-size: 13px; color: var(--ink-muted); line-height: 1.7; }
+.tip-box strong { color: var(--ink); }
+.section-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--ink-dim); margin-bottom: 16px; }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-left">
+    <h1>Parlez<em>-vous</em><br>Français?</h1>
+    <p>Alfred S. Varghese · TEF Canada Prep · CLB 7 Target</p>
+  </div>
+  <div class="streak-box">
+    <div class="streak-num" id="streakNum">0</div>
+    <div class="streak-lbl">Day Streak 🔥</div>
+  </div>
+</div>
+<div class="progress-strip">
+  <div class="progress-meta"><span>Overall Progress</span><span id="progressPct">0% to CLB 7</span></div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+</div>
+<div class="nav">
+  <button class="nav-btn active" onclick="switchTab('learn',this)">📖 Learn</button>
+  <button class="nav-btn" onclick="switchTab('quiz',this)">✏️ Quiz</button>
+  <button class="nav-btn" onclick="switchTab('phrases',this)">💬 Phrases</button>
+  <button class="nav-btn" onclick="switchTab('tef',this)">🎯 TEF Info</button>
+</div>
+<div class="main">
+
+  <!-- LEARN -->
+  <div class="section active" id="tab-learn">
+    <p class="section-label">Choose a lesson to start</p>
+    <div class="lesson-grid" id="lessonGrid"></div>
+    <div class="lesson-view" id="lessonView">
+      <div class="lesson-header">
+        <div class="lesson-header-main">
+          <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+            <button class="back-btn" onclick="closelesson()">← Back</button>
+            <h2 class="lesson-title" id="lessonTitle"></h2>
+          </div>
+          <div class="lesson-tools">
+            <button class="mode-btn" id="flipModeBtn" onclick="toggleFlipMode()">Flip Mode: Off</button>
+            <div class="tts-status" id="ttsStatus">Voice: Ready</div>
+          </div>
+        </div>
+      </div>
+      <div class="vocab-grid" id="vocabGrid"></div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="section" id="tab-quiz">
+    <div class="quiz-container">
+      <div id="quizStart" style="text-align:center;padding:40px 0">
+        <div style="font-family:'Fraunces',serif;font-size:32px;font-weight:700;margin-bottom:8px">Test Your French</div>
+        <div style="font-size:14px;color:var(--ink-muted);margin-bottom:32px">Vocabulary, grammar, and TEF-style questions</div>
+        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+          <button class="quiz-submit" onclick="startQuiz('vocab')">Vocabulary (10 Qs)</button>
+          <button class="quiz-submit" onclick="startQuiz('grammar')">Grammar (10 Qs)</button>
+          <button class="quiz-submit" onclick="startQuiz('mixed')">Mixed — TEF Style (15 Qs)</button>
+        </div>
+      </div>
+      <div id="quizInProgress" style="display:none">
+        <div class="quiz-progress" id="quizDots"></div>
+        <div class="quiz-card" id="quizCard"></div>
+        <div class="quiz-feedback" id="quizFeedback"></div>
+        <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question →</button>
+      </div>
+      <div class="score-card" id="scoreCard">
+        <div class="score-num" id="scoreNum">0/0</div>
+        <div class="score-label">Questions correct</div>
+        <div class="score-msg" id="scoreMsg"></div>
+        <button class="retry-btn" onclick="startQuiz(currentQuizType)">Try Again</button>
+        <button class="retry-btn" onclick="showQuizStart()">Choose Different Quiz</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHRASES -->
+  <div class="section" id="tab-phrases">
+    <p class="section-label">Essential phrases for everyday French in Canada</p>
+    <div class="phrase-section">
+      <h3>🙋 Greetings & Introductions</h3>
+      <div class="phrase-row"><div class="pr-fr">Bonjour !</div><div><div class="pr-en">Hello / Good day!</div><div class="pr-note">Use anytime — morning, afternoon, evening. Never wrong.</div></div></div>
+      <div class="phrase-row"><div class="pr-fr">Je m'appelle Alfred.</div><div><div class="pr-en">My name is Alfred.</div><div class="pr-note">Literally: "I call myself Alfred"</div></div></div>
+      <div class="phrase-row"><div class="pr-fr">Enchanté !</div><div><div class="pr-en">Nice to meet you!</div><div class="pr-note">Standard polite greeting when introduced</div></div></div>
+      <div class="phrase-row"><div class="pr-fr">Comment allez-vous ?</div><div><div class="pr-en">How are you? (formal)</div><div class="pr-note">Use this in job interviews and professional settings</div></div></div>
+      <div class="phrase-row"><div class="pr-fr">Ça va bien, merci !</div><div><div class="pr-en">I'm doing well, thank you!</div><div class="pr-note">Standard friendly reply</div></div></div>
+    </div>
+    <div class="phrase-section">
+      <h3>💼 Work & Professional (Calgary context)</h3>
+      <div class="phrase-row"><div class="pr-fr">Je cherche du travail.</div><div><div class="pr-en">I am looking for work.</div><div class="pr-note">Key phrase for job hunting in Alberta</div></div></div>
+      <div class="phrase-row"><div class="pr-fr">J'ai de l'expérience en gestion.</div><div><div class="pr-en">I have experience in management.</div><div class="pr-note">Your main selling point in interviews</div></div></div>
+      <div class="phrase-row"><div class="pr-fr">Pourriez-vous répéter, s'il vous plaît ?</div><div><div class="pr-en">Could you repeat that, please?</div><div class="pr-note">Essential for TEF Speaking section</div></div></div>
+      <div class="phrase-row"><div class="pr-fr">Pouvez-vous parler plus lentement ?</div><div><div class="pr-en">Can you speak more slowly?</div><div class="pr-note">Use freely — never be embarrassed to ask</div></div></div>
+    </div>
+    <div class="phrase-section">
+      <h3>🏠 Daily Life in Calgary</h3>
+      <div class="phrase-row"><div class="pr-fr">Je voudrais louer un appartement.</div><div><div class="pr-en">I would like to rent an apartment.</div><div class="pr-note">Key phrase for housing in Calgary</div></div></div>
+      <div class="phrase-row"><div class="pr-fr">Combien ça coûte ?</div><div><div class="pr-en">How much does it cost?</div><div class="pr-note">Universal phrase for stores, services, everywhere</div></div></div>
+      <div class="phrase-row"><div class="pr-fr">Il fait très froid aujourd'hui !</div><div><div class="pr-en">It's very cold today!</div><div class="pr-note">You WILL use this every Calgary winter 😄</div></div></div>
+      <div class="phrase-row"><div class="pr-fr">C'est le vent chinook !</div><div><div class="pr-en">It's the chinook wind!</div><div class="pr-note">Alberta-specific warm wind — locals will love this</div></div></div>
+    </div>
+    <div class="phrase-section">
+      <h3>📝 TEF Canada Exam Phrases</h3>
+      <div class="phrase-row"><div class="pr-fr">À mon avis...</div><div><div class="pr-en">In my opinion...</div><div class="pr-note">Start TEF Writing/Speaking answers with this</div></div></div>
+      <div class="phrase-row"><div class="pr-fr">D'une part... d'autre part...</div><div><div class="pr-en">On one hand... on the other hand...</div><div class="pr-note">Shows sophisticated argumentation — examiners love it</div></div></div>
+      <div class="phrase-row"><div class="pr-fr">En conclusion...</div><div><div class="pr-en">In conclusion...</div><div class="pr-note">End your TEF written responses with this</div></div></div>
+      <div class="phrase-row"><div class="pr-fr">Cependant / Néanmoins</div><div><div class="pr-en">However / Nevertheless</div><div class="pr-note">Linking words that elevate your writing score</div></div></div>
+    </div>
+  </div>
+
+  <!-- TEF INFO -->
+  <div class="section" id="tab-tef">
+    <p class="section-label">TEF Canada — What you need to know</p>
+    <div class="tef-grid">
+      <div class="tef-card"><div class="tc-label">Your Target</div><div class="tc-val">CLB 7</div><div class="tc-desc">In all 4 skills — adds up to 50 CRS points to your Express Entry score</div></div>
+      <div class="tef-card"><div class="tc-label">CRS Bonus</div><div class="tc-val">+50 pts</div><div class="tc-desc">Bilingual bonus — the difference between waiting 2 years vs getting an ITA in 6 months</div></div>
+      <div class="tef-card"><div class="tc-label">Exam Duration</div><div class="tc-val">~3.5 hrs</div><div class="tc-desc">Reading (60 min) · Listening (40 min) · Writing (60 min) · Speaking (15 min)</div></div>
+      <div class="tef-card"><div class="tc-label">Your Exam Date</div><div class="tc-val">Jan 2027</div><div class="tc-desc">9 months of prep from now. A1 → CLB 7 is achievable with consistent daily study.</div></div>
+    </div>
+    <div class="tip-box"><div class="tip-title">📌 TEF Canada vs DELF/DALF</div><p>TEF Canada is <strong>specifically for immigration</strong> — only TEF Canada and TCF Canada are accepted for Express Entry. Book through <strong>Alliance Française</strong> or authorized centres in Dubai or online.</p></div>
+    <div class="tip-box"><div class="tip-title">📌 CLB 7 Score Requirements</div><p>Approximately: <strong>Reading: 207–232/300</strong> · <strong>Listening: 145–180/360</strong> · <strong>Writing: 14–15/20</strong> · <strong>Speaking: 14–15/20</strong>. Each section is scored independently.</p></div>
+    <div class="tip-box"><div class="tip-title">📌 Your 9-Month Study Plan</div><p><strong>Now–Jul 2026:</strong> This app daily + Duolingo 20 min. Build A1 vocabulary.<br><strong>Aug–Oct 2026:</strong> Alliance Française A2 course + TV5Monde French news daily.<br><strong>Nov–Jan 2027:</strong> TEF Canada mock tests weekly. Book exam in November for January sitting.</p></div>
+    <div class="tip-box"><div class="tip-title">📌 Calgary French Resources (after you land)</div><p><strong>Alliance Française Calgary</strong> — classes and events · <strong>Centre for Newcomers</strong> — free French for immigrants · <strong>Radio-Canada</strong> — Canadian French news · <strong>RFI Savoirs</strong> — free online A1–B2 with exercises</p></div>
+  </div>
+
+</div>
+<script>
+let lessons = [];
+let allQuestions = [];
+
+let currentQuiz = [], currentQ = 0, score = 0, currentQuizType = 'mixed', answered = false;
+let completedLessons = JSON.parse(localStorage.getItem('completedLessons') || '[]');
+let streak = parseInt(localStorage.getItem('streak') || '0');
+let lastStudied = localStorage.getItem('lastStudied') || '';
+let currentLessonId = '';
+let flipMode = false;
+let availableFrenchVoice = null;
+
+async function init() {
+  await loadContent();
+  updateStreak();
+  renderLessonCards();
+  updateProgress();
+}
+
+async function loadContent() {
+  const lessonGrid = document.getElementById('lessonGrid');
+  lessonGrid.innerHTML = '<div style="grid-column:1/-1;color:var(--ink-muted);padding:12px">Loading lessons...</div>';
+  try {
+    const response = await fetch('/api/content');
+    if (!response.ok) throw new Error('content request failed');
+    const data = await response.json();
+    lessons = Array.isArray(data.lessons) ? data.lessons : [];
+    allQuestions = Array.isArray(data.allQuestions) ? data.allQuestions : [];
+  } catch (err) {
+    lessons = [];
+    allQuestions = [];
+    lessonGrid.innerHTML = '<div style="grid-column:1/-1;color:var(--red);padding:12px">Could not load lesson data. Check backend server.</div>';
+  }
+}
+
+function updateStreak() {
+  document.getElementById('streakNum').textContent = streak;
+}
+
+function markStudied() {
+  const today = new Date().toDateString();
+  if (lastStudied !== today) {
+    streak = (lastStudied === new Date(Date.now() - 86400000).toDateString()) ? streak + 1 : 1;
+    lastStudied = today;
+    localStorage.setItem('streak', streak);
+    localStorage.setItem('lastStudied', today);
+    document.getElementById('streakNum').textContent = streak;
+  }
+}
+
+function updateProgress() {
+  const pct = Math.min(100, Math.round((completedLessons.length / lessons.length) * 60 + Math.min(streak * 3, 40)));
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressPct').textContent = pct + '% to CLB 7';
+}
+
+function switchTab(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+  closelesson();
+}
+
+function renderLessonCards() {
+  document.getElementById('lessonGrid').innerHTML = lessons.map(l => `
+    <div class="lesson-card" style="--card-color:${l.color};--card-color-soft:${l.colorSoft}" onclick="openLesson('${l.id}')">
+      <div class="card-icon">${l.icon}</div>
+      <div class="card-title">${l.title}</div>
+      <div class="card-sub">${l.sub}</div>
+      <div class="card-badge">${l.level}${completedLessons.includes(l.id) ? ' ✓' : ''}</div>
+    </div>`).join('');
+}
+
+function openLesson(id) {
+  currentLessonId = id;
+  const lesson = lessons.find(l => l.id === id);
+  document.getElementById('lessonGrid').style.display = 'none';
+  document.getElementById('lessonView').classList.add('active');
+  document.getElementById('lessonTitle').textContent = lesson.icon + ' ' + lesson.title;
+  renderVocabCards(lesson);
+  if (!completedLessons.includes(id)) { completedLessons.push(id); localStorage.setItem('completedLessons', JSON.stringify(completedLessons)); }
+  markStudied(); updateProgress(); renderLessonCards();
+}
+
+function closelesson() {
+  currentLessonId = '';
+  document.getElementById('lessonGrid').style.display = '';
+  document.getElementById('lessonView').classList.remove('active');
+}
+
+function renderVocabCards(lesson) {
+  const grid = document.getElementById('vocabGrid');
+  grid.classList.toggle('flip-mode', flipMode);
+  updateFlipModeButton();
+  if (flipMode) {
+    grid.innerHTML = lesson.vocab.map((v, i) => `
+      <div class="vocab-card" onclick="this.classList.toggle('flipped')">
+        <div class="vc-front">
+          <div class="vc-french">${v.fr}</div>
+          <div class="vc-meta">
+            <button class="speak-btn" onclick="speakFrench('${escapeForAttr(v.fr)}', event)">🔊 Pronounce</button>
+          </div>
+          <div class="vc-audio">tap card to flip</div>
+        </div>
+        <div class="vc-back">
+          <div class="vc-english">${v.en}</div>
+          <div class="vc-example">${v.ex}</div>
+          <div class="vc-meta">
+            <button class="speak-btn" onclick="speakFrench('${escapeForAttr(v.fr)}', event)">🔊 Replay French</button>
+          </div>
+        </div>
+      </div>`).join('');
+  } else {
+    grid.innerHTML = lesson.vocab.map(v => `
+      <div class="vocab-card" onclick="this.classList.toggle('revealed')">
+        <div class="vc-french">${v.fr}</div>
+        <div class="vc-english">${v.en}</div>
+        <div class="vc-example">${v.ex}</div>
+        <div class="vc-meta">
+          <button class="speak-btn" onclick="speakFrench('${escapeForAttr(v.fr)}', event)">🔊 Pronounce</button>
+          <div class="vc-audio">tap card for example</div>
+        </div>
+      </div>`).join('');
+  }
+}
+
+function toggleFlipMode() {
+  flipMode = !flipMode;
+  if (!currentLessonId) return;
+  const lesson = lessons.find(l => l.id === currentLessonId);
+  if (lesson) renderVocabCards(lesson);
+}
+
+function updateFlipModeButton() {
+  const btn = document.getElementById('flipModeBtn');
+  btn.textContent = `Flip Mode: ${flipMode ? 'On' : 'Off'}`;
+  btn.classList.toggle('active', flipMode);
+}
+
+function speakFrench(text, event) {
+  if (event) event.stopPropagation();
+  if (!('speechSynthesis' in window)) {
+    setTtsStatus('Not supported', 'error');
+    return;
+  }
+  if (!text) return;
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'fr-CA';
+  utterance.rate = 0.92;
+  utterance.pitch = 1.0;
+  if (availableFrenchVoice) utterance.voice = availableFrenchVoice;
+  utterance.onstart = () => setTtsStatus('Speaking...', 'speaking');
+  utterance.onend = () => setTtsStatus('Done', '');
+  utterance.onerror = () => setTtsStatus('Playback error', 'error');
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(utterance);
+}
+
+function resolveFrenchVoice() {
+  if (!('speechSynthesis' in window)) return;
+  const voices = window.speechSynthesis.getVoices();
+  if (!voices || !voices.length) return;
+  availableFrenchVoice =
+    voices.find(v => v.lang === 'fr-CA') ||
+    voices.find(v => v.lang && v.lang.toLowerCase().startsWith('fr')) ||
+    null;
+}
+
+function escapeForAttr(text) {
+  return String(text).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+}
+
+function setTtsStatus(text, stateClass) {
+  const el = document.getElementById('ttsStatus');
+  if (!el) return;
+  el.textContent = `Voice: ${text}`;
+  el.classList.remove('speaking', 'error');
+  if (stateClass) el.classList.add(stateClass);
+}
+
+function startQuiz(type) {
+  if (!allQuestions.length) {
+    const fb = document.getElementById('quizFeedback');
+    fb.className = 'quiz-feedback show wrong';
+    fb.textContent = 'Quiz data is unavailable. Ensure backend is running.';
+    return;
+  }
+  currentQuizType = type;
+  let pool = [...allQuestions];
+  if (type === 'vocab') pool = pool.filter(q => q.category === 'vocab');
+  if (type === 'grammar') pool = pool.filter(q => q.category !== 'vocab');
+  pool = pool.sort(() => Math.random() - 0.5);
+  currentQuiz = pool.slice(0, type === 'mixed' ? 15 : 10);
+  currentQ = 0; score = 0; answered = false;
+  document.getElementById('quizStart').style.display = 'none';
+  document.getElementById('scoreCard').classList.remove('show');
+  document.getElementById('quizInProgress').style.display = 'block';
+  renderDots(); renderQuestion(); markStudied();
+}
+
+function renderDots() {
+  document.getElementById('quizDots').innerHTML = currentQuiz.map((_, i) =>
+    `<div class="quiz-dot ${i < currentQ ? 'done' : i === currentQ ? 'current' : ''}"></div>`).join('');
+}
+
+function renderQuestion() {
+  const q = currentQuiz[currentQ];
+  answered = false;
+  document.getElementById('quizFeedback').className = 'quiz-feedback';
+  document.getElementById('nextBtn').classList.remove('show');
+  let html = `<div class="quiz-type">${q.category.toUpperCase()} · Q${currentQ + 1} of ${currentQuiz.length}</div>`;
+  html += `<div class="quiz-question">${q.q}</div>`;
+  if (q.type === 'mc') {
+    html += `<div class="quiz-options">${q.options.map((o, i) => `<button class="quiz-opt" onclick="checkMC(${i})">${o}</button>`).join('')}</div>`;
+  } else {
+    html += `<div style="font-size:12px;color:var(--ink-dim);margin-bottom:12px">Hint: ${q.hint}</div>`;
+    html += `<input class="quiz-input" id="fillInput" type="text" placeholder="Type your answer..." onkeydown="if(event.key==='Enter')checkFill()">`;
+    html += `<button class="quiz-submit" onclick="checkFill()">Check Answer</button>`;
+  }
+  document.getElementById('quizCard').innerHTML = html;
+  renderDots();
+}
+
+function checkMC(selected) {
+  if (answered) return;
+  answered = true;
+  const q = currentQuiz[currentQ];
+  const opts = document.querySelectorAll('.quiz-opt');
+  opts.forEach(o => o.disabled = true);
+  const correct = selected === q.answer;
+  opts[selected].classList.add(correct ? 'correct' : 'wrong');
+  if (!correct) opts[q.answer].classList.add('correct');
+  if (correct) score++;
+  showFeedback(correct, q.explanation);
+}
+
+function checkFill() {
+  if (answered) return;
+  const input = document.getElementById('fillInput');
+  if (!input || !input.value.trim()) return;
+  answered = true;
+  const q = currentQuiz[currentQ];
+  const correct = input.value.trim().toLowerCase() === q.answer.toLowerCase();
+  input.classList.add(correct ? 'correct' : 'wrong');
+  input.disabled = true;
+  if (!correct) input.value = input.value + '  →  ' + q.answer;
+  if (correct) score++;
+  showFeedback(correct, q.explanation);
+}
+
+function showFeedback(correct, explanation) {
+  const fb = document.getElementById('quizFeedback');
+  fb.className = 'quiz-feedback show ' + (correct ? 'correct' : 'wrong');
+  fb.innerHTML = (correct ? '✓ Correct! ' : '✗ Not quite. ') + explanation;
+  document.getElementById('nextBtn').classList.add('show');
+}
+
+function nextQuestion() {
+  currentQ++;
+  if (currentQ >= currentQuiz.length) { showScore(); } else { renderQuestion(); }
+}
+
+function showScore() {
+  document.getElementById('quizInProgress').style.display = 'none';
+  const pct = Math.round((score / currentQuiz.length) * 100);
+  document.getElementById('scoreNum').textContent = score + '/' + currentQuiz.length;
+  const msgs = pct >= 80 ? ['Magnifique !', 'Excellent travail !', 'Très bien !', 'Bravo !'] : pct >= 50 ? ['Pas mal !', 'Continuez !', 'Bonne progression !'] : ['Continuez à pratiquer !', 'Ne vous découragez pas !'];
+  document.getElementById('scoreMsg').textContent = msgs[Math.floor(Math.random() * msgs.length)];
+  document.getElementById('scoreCard').classList.add('show');
+  updateProgress();
+}
+
+function showQuizStart() {
+  document.getElementById('quizStart').style.display = 'block';
+  document.getElementById('quizInProgress').style.display = 'none';
+  document.getElementById('scoreCard').classList.remove('show');
+}
+
+if ('speechSynthesis' in window && typeof window.speechSynthesis.onvoiceschanged !== 'undefined') {
+  window.speechSynthesis.onvoiceschanged = resolveFrenchVoice;
+}
+
+resolveFrenchVoice();
+init();
+</script>
+</body>
+</html>
