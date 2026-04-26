@@ -1,10 +1,13 @@
 # Claude Code Handoff - French Tutor
 
 ## Current State
-- Frontend remains in `french-tutor.html`.
-- Backend lives in `backend/server.js` with data in `backend/data.js`.
-- App now loads lesson and quiz content from backend endpoint `GET /api/content`.
-- TTS status indicator is visible in lesson toolbar and updates during speech playback.
+- Frontend is now split into modular files under `frontend/`:
+  - `frontend/index.html` — HTML structure only
+  - `frontend/styles.css` — all styles
+  - `frontend/app.js` — all JavaScript
+- `backend/server.js` updated to serve `frontend/index.html` at `/`
+- `french-tutor.html` (monolithic) still exists in root — safe to delete once verified
+- Static files served from ROOT_DIR so `/frontend/styles.css` and `/frontend/app.js` resolve correctly
 
 ## Run
 1. `npm install`
@@ -17,12 +20,15 @@
 - `GET /api/content`
 
 ## Suggested Next Steps
-- Split `french-tutor.html` into modular frontend files (`frontend/index.html`, `frontend/styles.css`, `frontend/app.js`).
-- Add API versioning and input validation (`/api/v1/...`).
-- Add lightweight tests:
-  - backend endpoint tests for `/api/health` and `/api/content`
-  - frontend smoke test for quiz start and lesson render.
-- Add CI workflow for install + lint + basic backend test run.
+1. **Delete `french-tutor.html`** from root once you've verified the new modular version works in browser.
+2. **Add lightweight tests** (use Node's built-in `node:test` — no extra dependency needed):
+   - `GET /api/health` returns `{ ok: true }`
+   - `GET /api/content` returns `{ lessons: [...], allQuestions: [...] }`
+   - Add `"test": "node --test"` to `package.json` scripts
+3. **Add CI workflow** (`.github/workflows/ci.yml`): install + test on push.
+4. **Branch hygiene**: repo is currently committing directly to `main`. Consider switching to `dev` branch for active work per the project branching strategy.
 
 ## Notes
-- There are macOS metadata files in project root with `._` prefixes. They are not required for app logic and should be excluded from commits if possible.
+- GitHub remote: `https://github.com/redreach-repo/alfred-hub.git`
+- `gh` CLI is not installed on this machine — use `git` directly or install via `brew install gh`
+- macOS `._*` metadata files are excluded via `.gitignore` — no action needed
