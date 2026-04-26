@@ -36,7 +36,7 @@ app.get('/api/content', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(ROOT_DIR, 'french-tutor.html'));
+  res.sendFile(path.join(ROOT_DIR, 'frontend', 'index.html'));
 });
 
 app.listen(PORT, () => {

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Français — Alfred's TEF Canada Prep</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;0,900;1,300;1,600&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/frontend/styles.css">
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <h1>Parlez<em>-vous</em><br>Français?</h1>
+    <p>Alfred S. Varghese · TEF Canada Prep · CLB 7 Target</p>
+  </div>
+  <div class="streak-box">
+    <div class="streak-num" id="streakNum">0</div>
+    <div class="streak-lbl">Day Streak 🔥</div>
+  </div>
+</div>
+
+<div class="progress-strip">
+  <div class="progress-meta"><span>Overall Progress</span><span id="progressPct">0% to CLB 7</span></div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+</div>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="switchTab('learn',this)">📖 Learn</button>
+  <button class="nav-btn" onclick="switchTab('quiz',this)">✏️ Quiz</button>
+  <button class="nav-btn" onclick="switchTab('phrases',this)">💬 Phrases</button>
+  <button class="nav-btn" onclick="switchTab('tef',this)">🎯 TEF Info</button>
+</div>
+
+<div class="main">
+
+  <!-- LEARN -->
+  <div class="section active" id="tab-learn">
+    <p class="section-label">Choose a lesson to start</p>
+    <div class="lesson-grid" id="lessonGrid"></div>
+    <div class="lesson-view" id="lessonView">
+      <div class="lesson-header">
+        <div class="lesson-header-main">
+          <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+            <button class="back-btn" onclick="closelesson()">← Back</button>
+            <h2 class="lesson-title" id="lessonTitle"></h2>
+          </div>
+          <div class="lesson-tools">
+            <button class="mode-btn" id="flipModeBtn" onclick="toggleFlipMode()">Flip Mode: Off</button>
+            <div class="tts-status" id="ttsStatus">Voice: Ready</div>
+          </div>
+        </div>
+      </div>
+      <div class="vocab-grid" id="vocabGrid"></div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="section" id="tab-quiz">
+    <div class="quiz-container">
+      <div id="quizStart" style="text-align:center;padding:40px 0">
+        <div style="font-family:'Fraunces',serif;font-size:32px;font-weight:700;margin-bottom:8px">Test Your French</div>
+        <div style="font-size:14px;color:var(--ink-muted);margin-bottom:32px">Vocabulary, grammar, and TEF-style questions</div>
+        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+          <button class="quiz-submit" onclick="startQuiz('vocab')">Vocabulary (10 Qs)</button>
+          <button class="quiz-submit" onclick="startQuiz('grammar')">Grammar (10 Qs)</button>
+          <button class="quiz-submit" onclick="startQuiz('mixed')">Mixed — TEF Style (15 Qs)</button>
+        </div>
+      </div>
+      <div id="quizInProgress" style="display:none">
+        <div class="quiz-progress" id="quizDots"></div>
+        <div class="quiz-card" id="quizCard"></div>
+        <div class="quiz-feedback" id="quizFeedback"></div>
+        <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question →</button>
+      </div>
+      <div class="score-card" id="scoreCard">
+        <div class="score-num" id="scoreNum">0/0</div>
+        <div class="score-label">Questions correct</div>
+        <div class="score-msg" id="scoreMsg"></div>
+        <button class="retry-btn" onclick="startQuiz(currentQuizType)">Try Again</button>
+        <button class="retry-btn" onclick="showQuizStart()">Choose Different Quiz</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHRASES -->
+  <div class="section" id="tab-phrases">
+    <p class="section-label">Essential phrases for everyday French in Canada</p>
+    <div class="phrase-section">
+      <h3>🙋 Greetings & Introductions</h3>
+      <div class="phrase-row"><div class="pr-fr">Bonjour !</div><div><div class="pr-en">Hello / Good day!</div><div class="pr-note">Use anytime — morning, afternoon, evening. Never wrong.</div></div></div>
+      <div class="phrase-row"><div class="pr-fr">Je m'appelle Alfred.</div><div><div class="pr-en">My name is Alfred.</div><div class="pr-note">Literally: "I call myself Alfred"</div></div></div>
+      <div class="phrase-row"><div class="pr-fr">Enchanté !</div><div><div class="pr-en">Nice to meet you!</div><div class="pr-note">Standard polite greeting when introduced</div></div></div>
+      <div class="phrase-row"><div class="pr-fr">Comment allez-vous ?</div><div><div class="pr-en">How are you? (formal)</div><div class="pr-note">Use this in job interviews and professional settings</div></div></div>
+      <div class="phrase-row"><div class="pr-fr">Ça va bien, merci !</div><div><div class="pr-en">I'm doing well, thank you!</div><div class="pr-note">Standard friendly reply</div></div></div>
+    </div>
+    <div class="phrase-section">
+      <h3>💼 Work & Professional (Calgary context)</h3>
+      <div class="phrase-row"><div class="pr-fr">Je cherche du travail.</div><div><div class="pr-en">I am looking for work.</div><div class="pr-note">Key phrase for job hunting in Alberta</div></div></div>
+      <div class="phrase-row"><div class="pr-fr">J'ai de l'expérience en gestion.</div><div><div class="pr-en">I have experience in management.</div><div class="pr-note">Your main selling point in interviews</div></div></div>
+      <div class="phrase-row"><div class="pr-fr">Pourriez-vous répéter, s'il vous plaît ?</div><div><div class="pr-en">Could you repeat that, please?</div><div class="pr-note">Essential for TEF Speaking section</div></div></div>
+      <div class="phrase-row"><div class="pr-fr">Pouvez-vous parler plus lentement ?</div><div><div class="pr-en">Can you speak more slowly?</div><div class="pr-note">Use freely — never be embarrassed to ask</div></div></div>
+    </div>
+    <div class="phrase-section">
+      <h3>🏠 Daily Life in Calgary</h3>
+      <div class="phrase-row"><div class="pr-fr">Je voudrais louer un appartement.</div><div><div class="pr-en">I would like to rent an apartment.</div><div class="pr-note">Key phrase for housing in Calgary</div></div></div>
+      <div class="phrase-row"><div class="pr-fr">Combien ça coûte ?</div><div><div class="pr-en">How much does it cost?</div><div class="pr-note">Universal phrase for stores, services, everywhere</div></div></div>
+      <div class="phrase-row"><div class="pr-fr">Il fait très froid aujourd'hui !</div><div><div class="pr-en">It's very cold today!</div><div class="pr-note">You WILL use this every Calgary winter 😄</div></div></div>
+      <div class="phrase-row"><div class="pr-fr">C'est le vent chinook !</div><div><div class="pr-en">It's the chinook wind!</div><div class="pr-note">Alberta-specific warm wind — locals will love this</div></div></div>
+    </div>
+    <div class="phrase-section">
+      <h3>📝 TEF Canada Exam Phrases</h3>
+      <div class="phrase-row"><div class="pr-fr">À mon avis...</div><div><div class="pr-en">In my opinion...</div><div class="pr-note">Start TEF Writing/Speaking answers with this</div></div></div>
+      <div class="phrase-row"><div class="pr-fr">D'une part... d'autre part...</div><div><div class="pr-en">On one hand... on the other hand...</div><div class="pr-note">Shows sophisticated argumentation — examiners love it</div></div></div>
+      <div class="phrase-row"><div class="pr-fr">En conclusion...</div><div><div class="pr-en">In conclusion...</div><div class="pr-note">End your TEF written responses with this</div></div></div>
+      <div class="phrase-row"><div class="pr-fr">Cependant / Néanmoins</div><div><div class="pr-en">However / Nevertheless</div><div class="pr-note">Linking words that elevate your writing score</div></div></div>
+    </div>
+  </div>
+
+  <!-- TEF INFO -->
+  <div class="section" id="tab-tef">
+    <p class="section-label">TEF Canada — What you need to know</p>
+    <div class="tef-grid">
+      <div class="tef-card"><div class="tc-label">Your Target</div><div class="tc-val">CLB 7</div><div class="tc-desc">In all 4 skills — adds up to 50 CRS points to your Express Entry score</div></div>
+      <div class="tef-card"><div class="tc-label">CRS Bonus</div><div class="tc-val">+50 pts</div><div class="tc-desc">Bilingual bonus — the difference between waiting 2 years vs getting an ITA in 6 months</div></div>
+      <div class="tef-card"><div class="tc-label">Exam Duration</div><div class="tc-val">~3.5 hrs</div><div class="tc-desc">Reading (60 min) · Listening (40 min) · Writing (60 min) · Speaking (15 min)</div></div>
+      <div class="tef-card"><div class="tc-label">Your Exam Date</div><div class="tc-val">Jan 2027</div><div class="tc-desc">9 months of prep from now. A1 → CLB 7 is achievable with consistent daily study.</div></div>
+    </div>
+    <div class="tip-box"><div class="tip-title">📌 TEF Canada vs DELF/DALF</div><p>TEF Canada is <strong>specifically for immigration</strong> — only TEF Canada and TCF Canada are accepted for Express Entry. Book through <strong>Alliance Française</strong> or authorized centres in Dubai or online.</p></div>
+    <div class="tip-box"><div class="tip-title">📌 CLB 7 Score Requirements</div><p>Approximately: <strong>Reading: 207–232/300</strong> · <strong>Listening: 145–180/360</strong> · <strong>Writing: 14–15/20</strong> · <strong>Speaking: 14–15/20</strong>. Each section is scored independently.</p></div>
+    <div class="tip-box"><div class="tip-title">📌 Your 9-Month Study Plan</div><p><strong>Now–Jul 2026:</strong> This app daily + Duolingo 20 min. Build A1 vocabulary.<br><strong>Aug–Oct 2026:</strong> Alliance Française A2 course + TV5Monde French news daily.<br><strong>Nov–Jan 2027:</strong> TEF Canada mock tests weekly. Book exam in November for January sitting.</p></div>
+    <div class="tip-box"><div class="tip-title">📌 Calgary French Resources (after you land)</div><p><strong>Alliance Française Calgary</strong> — classes and events · <strong>Centre for Newcomers</strong> — free French for immigrants · <strong>Radio-Canada</strong> — Canadian French news · <strong>RFI Savoirs</strong> — free online A1–B2 with exercises</p></div>
+  </div>
+
+</div>
+
+<script src="/frontend/app.js"></script>
+</body>
+</html>
