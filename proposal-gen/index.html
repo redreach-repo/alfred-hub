@@ -190,6 +190,20 @@
       transition: all .15s;
     }
     .btn-copy:hover { background: var(--accent2); color: #000; }
+    .btn-regenerate {
+      margin-top: 16px;
+      margin-left: 10px;
+      padding: 9px 20px;
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      background: transparent;
+      color: var(--accent);
+      cursor: pointer;
+      font-size: 0.88rem;
+      transition: all .15s;
+    }
+    .btn-regenerate:hover { background: var(--accent); color: #fff; }
+    .btn-regenerate:disabled { opacity: .5; cursor: not-allowed; }
 
     /* Error */
     .error-msg {
@@ -307,6 +321,7 @@
         </div>
         <div class="proposal-text" id="proposalText"></div>
         <button class="btn-copy" onclick="copyProposal()">Copy to Clipboard</button>
+        <button class="btn-regenerate" id="regenBtn" onclick="regenerate()">Regenerate</button>
       </div>
     </div>
   </div>
@@ -322,6 +337,7 @@
 
 <script>
   let selectedRate = 65;
+  let lastFormData = null;
 
   function switchTab(name, btn) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -367,23 +383,42 @@
     document.getElementById('errorMsg').classList.remove('show');
   }
 
-  function generate() {
+  function buildFormData() {
     clearError();
     const jobPosting = document.getElementById('jobPosting').value.trim();
     const jobTitle   = document.getElementById('jobTitle').value.trim();
     const jobUrl     = document.getElementById('jobUrl').value.trim();
+    const customRate = parseInt(document.getElementById('customRate').value, 10);
+    const effectiveRate = Number.isFinite(selectedRate) ? selectedRate : customRate;
 
-    if (jobPosting.length < 50) {
+    return {
+      jobPosting,
+      jobTitle,
+      jobUrl,
+      rate: effectiveRate
+    };
+  }
+
+  function runGeneration(formData) {
+    if (!formData || !formData.jobPosting || formData.jobPosting.length < 50) {
       showError('Please paste the full job description (at least 50 characters).');
       return;
     }
+    if (!formData.rate || formData.rate < 10 || formData.rate > 500) {
+      showError('Please choose a valid hourly rate (10-500).');
+      return;
+    }
+
+    lastFormData = formData;
 
     setLoading(true);
     document.getElementById('resultBox').classList.remove('show');
+    document.getElementById('regenBtn').disabled = true;
 
     google.script.run
       .withSuccessHandler(function(res) {
         setLoading(false);
+        document.getElementById('regenBtn').disabled = false;
         if (!res.ok) { showError(res.error); return; }
         document.getElementById('proposalText').textContent = res.proposal;
         document.getElementById('wordCountBadge').textContent = res.wordCount + ' words';
@@ -391,14 +426,23 @@
       })
       .withFailureHandler(function(err) {
         setLoading(false);
+        document.getElementById('regenBtn').disabled = false;
         showError('Unexpected error: ' + err.message);
       })
-      .handleGenerate({
-        jobPosting,
-        jobTitle,
-        jobUrl,
-        rate: selectedRate,
-      });
+      .handleGenerate(formData);
+  }
+
+  function generate() {
+    runGeneration(buildFormData());
+  }
+
+  function regenerate() {
+    clearError();
+    if (!lastFormData) {
+      showError('Generate once first, then use Regenerate.');
+      return;
+    }
+    runGeneration(lastFormData);
   }
 
   function copyProposal() {

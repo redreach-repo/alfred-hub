@@ -1,127 +1,40 @@
-# Claude Code Handoff - French Tutor
+# Claude Code Handoff - French Tutor + Proposal Generator
 
-## Current State
-- Frontend is now split into modular files under `frontend/`:
-  - `frontend/index.html` — HTML structure only
+## French Tutor — Current State
+- **Live URL**: https://alfred-canada-hub.vercel.app (phone/iPad/desktop)
+- **Local**: `npm start` → http://localhost:3000
+- Frontend split into modular files:
+  - `frontend/index.html` — HTML structure
   - `frontend/styles.css` — all styles
   - `frontend/app.js` — all JavaScript
-- `backend/server.js` updated to serve `frontend/index.html` at `/`
-- `french-tutor.html` (monolithic original) still exists in root — delete it after verifying the app works
-- Static files served from ROOT_DIR so `/frontend/styles.css` and `/frontend/app.js` resolve correctly
+- `backend/server.js` exports `app` (supports Vercel serverless + tests)
+- `vercel.json` routes all requests through `backend/server.js`
 
-## Run
+## Proposal Generator — Current State
+- **Live URL**: https://script.google.com/macros/s/AKfycbxAYB3aNsNVZuVthF_oaGoncfzRQyGCTJSu3BVUZvdPf5QZDXOQ1UJzLt9J7aSAg9j7/exec
+- GAS project ID: `1H0iBjViApuIdB4VSnVaeG0JKFbzHvlLn8QaXzmkzJ_djawjO_47lkW08`
+- Script Properties set: CLAUDE_API_KEY ✓, SHEET_ID ✓
+- Sheet ID: `1EZsLZd9jRwmCucgL70LotOCteZPt4VZXOG0sylMuHvYRhNDut5OMxDxI`
+- To push updates: `cd proposal-gen && clasp push --force && clasp deploy --description "v2"`
+
+## Run Locally
 1. `npm install`
 2. `npm start`
-3. Open `http://localhost:3000`
+3. Open http://localhost:3000
 
-## Implemented API Endpoints
-- `GET /api/health` → `{ ok: true, service: 'french-tutor-backend', timestamp: '...' }`
-- `GET /api/quiz/meta` → `{ quizTypes: [...], speechSynthesis: '...' }`
-- `GET /api/content` → `{ lessons: [...], allQuestions: [...] }`
+## API Endpoints
+- `GET /api/health`
+- `GET /api/quiz/meta`
+- `GET /api/content`
 
----
-
-## YOUR TASK — Add Backend Tests
-
-Use Node.js built-in `node:test` + `node:assert` — no extra packages needed.
-
-### 1. Create `backend/server.js` to support testability
-The server currently calls `app.listen()` at the bottom unconditionally.
-Refactor `backend/server.js` so it exports `app`:
-
-```js
-// Add at the bottom, replacing the current app.listen() call:
-if (require.main === module) {
-  app.listen(PORT, () => {
-    console.log(`French Tutor backend running on http://localhost:${PORT}`);
-  });
-}
-
-module.exports = app;
-```
-
-### 2. Create `backend/server.test.js`
-
-Use this exact structure:
-
-```js
-const test = require('node:test');
-const assert = require('node:assert/strict');
-const http = require('node:http');
-const app = require('./server');
-
-let server;
-let baseUrl;
-
-test.before((_, done) => {
-  server = http.createServer(app);
-  server.listen(0, () => {
-    baseUrl = `http://localhost:${server.address().port}`;
-    done();
-  });
-});
-
-test.after((_, done) => {
-  server.close(done);
-});
-
-// Helper
-async function get(path) {
-  const res = await fetch(baseUrl + path);
-  return { status: res.status, body: await res.json() };
-}
-
-test('GET /api/health returns ok:true', async () => {
-  const { status, body } = await get('/api/health');
-  assert.equal(status, 200);
-  assert.equal(body.ok, true);
-  assert.equal(body.service, 'french-tutor-backend');
-  assert.ok(body.timestamp);
-});
-
-test('GET /api/content returns lessons and questions arrays', async () => {
-  const { status, body } = await get('/api/content');
-  assert.equal(status, 200);
-  assert.ok(Array.isArray(body.lessons), 'lessons should be an array');
-  assert.ok(Array.isArray(body.allQuestions), 'allQuestions should be an array');
-  assert.ok(body.lessons.length > 0, 'should have at least one lesson');
-  assert.ok(body.allQuestions.length > 0, 'should have at least one question');
-});
-
-test('GET /api/quiz/meta returns quizTypes array', async () => {
-  const { status, body } = await get('/api/quiz/meta');
-  assert.equal(status, 200);
-  assert.ok(Array.isArray(body.quizTypes));
-  assert.equal(body.quizTypes.length, 3);
-});
-```
-
-### 3. Update `package.json` scripts
-
-Add:
-```json
-"test": "node --test backend/server.test.js"
-```
-
-### 4. Run and verify
-```bash
-npm test
-```
-All 3 tests should pass. Fix anything that doesn't.
-
-### 5. Commit
-```
-test: add backend endpoint tests for health, content, and quiz/meta
-```
-
----
-
-## After Tests Pass — Next Steps
-1. Delete `french-tutor.html` from root (it's been replaced by `frontend/index.html`)
-2. Add CI workflow at `.github/workflows/ci.yml` — runs `npm install && npm test` on push to main
+## Suggested Next Steps
+1. **Add backend tests** (`backend/server.test.js`) using `node:test` — see previous handoff for exact test code. The server already exports `app` so this is ready to go.
+2. **Delete `french-tutor.html`** from root — replaced by `frontend/index.html`
+3. **Add CI** (`.github/workflows/ci.yml`) — `npm install && npm test` on push
+4. **Vercel auto-deploy**: connect the GitHub repo in Vercel dashboard so every push to main auto-deploys
 
 ## Notes
 - GitHub remote: `https://github.com/redreach-repo/alfred-hub.git`
+- 4 commits ahead of origin/main — push when ready: `git push origin main`
 - `gh` CLI not installed — use `git` directly
-- `fetch` is available natively in Node 18+ — no need to install node-fetch
-- macOS `._*` files are gitignored — ignore them
+- `._*` macOS files are gitignored
