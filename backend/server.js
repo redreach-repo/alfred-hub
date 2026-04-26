@@ -39,6 +39,10 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(ROOT_DIR, 'frontend', 'index.html'));
 });
 
-app.listen(PORT, () => {
-  console.log(`French Tutor backend running on http://localhost:${PORT}`);
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`French Tutor backend running on http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app;
